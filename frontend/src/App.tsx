@@ -6,6 +6,7 @@ import { LandingPage } from "./features/landing/LandingPage";
 import NotFound from "./pages/NotFound";
 import AuthCallback from "./pages/AuthCallback";
 import Onboarding from "./pages/Onboarding";
+import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 
 function App() {
@@ -21,6 +22,14 @@ function App() {
             element={
               <ProtectedRoute requireOnboarding={false}>
                 <Onboarding />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
               </ProtectedRoute>
             }
           />

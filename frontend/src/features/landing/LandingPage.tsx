@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Brain,
   Code,
@@ -14,6 +16,14 @@ import { GoogleLoginButton } from "../../components/auth/GoogleLoginButton";
 
 export function LandingPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Redirect onboarded users away from landing page
+    if (user?.isOnboarded) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [user, navigate]);
   return (
     <div className="min-h-screen bg-black">
       {/* Hero Section */}
