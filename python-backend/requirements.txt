@@ -4,3 +4,8 @@ prisma
 python-dotenv
 pydantic
 pydantic-settings
+authlib
+httpx
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
