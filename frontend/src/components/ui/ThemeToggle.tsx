@@ -1,43 +1,101 @@
-import { useTheme } from "../../contexts/ThemeContext";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Moon, Sun } from "lucide-react";
+import { flushSync } from "react-dom";
+import { cn } from "../../lib/utils";
 
-export function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme();
+interface AnimatedThemeTogglerProps
+  extends React.ComponentPropsWithoutRef<"button"> {
+  duration?: number;
+}
+
+export function ThemeToggle({
+  className,
+  duration = 400,
+  ...props
+}: AnimatedThemeTogglerProps) {
+  const [isDark, setIsDark] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const updateTheme = () => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    };
+    updateTheme();
+
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const toggleTheme = useCallback(async () => {
+    if (!buttonRef.current) return;
+
+    // Check if View Transition API is supported
+    if (!document.startViewTransition) {
+      // Fallback for browsers that don't support View Transition API
+      flushSync(() => {
+        const newTheme = !isDark;
+        setIsDark(newTheme);
+        document.documentElement.classList.toggle("dark");
+        localStorage.setItem("theme", newTheme ? "dark" : "light");
+      });
+      return;
+    }
+
+    await document.startViewTransition(() => {
+      flushSync(() => {
+        const newTheme = !isDark;
+        setIsDark(newTheme);
+        document.documentElement.classList.toggle("dark");
+        localStorage.setItem("theme", newTheme ? "dark" : "light");
+      });
+    }).ready;
+
+    const { top, left, width, height } =
+      buttonRef.current.getBoundingClientRect();
+    const x = left + width / 2;
+    const y = top + height / 2;
+    const maxRadius = Math.hypot(
+      Math.max(left, window.innerWidth - left),
+      Math.max(top, window.innerHeight - top)
+    );
+
+    document.documentElement.animate(
+      {
+        clipPath: [
+          `circle(0px at ${x}px ${y}px)`,
+          `circle(${maxRadius}px at ${x}px ${y}px)`,
+        ],
+      },
+      {
+        duration,
+        easing: "ease-in-out",
+        pseudoElement: "::view-transition-new(root)",
+      }
+    );
+  }, [isDark, duration]);
 
   return (
     <button
+      ref={buttonRef}
       onClick={toggleTheme}
-      className="p-2 rounded-lg glass-card-purple hover:scale-110 transition-all"
-      aria-label="Toggle theme"
-    >
-      {theme === "dark" ? (
-        <svg
-          className="w-5 h-5 text-text-secondary"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-          />
-        </svg>
-      ) : (
-        <svg
-          className="w-5 h-5 text-text-secondary"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-          />
-        </svg>
+      className={cn(
+        "p-2 rounded-lg glass-card-purple hover:scale-110 transition-all",
+        className
       )}
+      aria-label="Toggle theme"
+      {...props}
+    >
+      {isDark ? (
+        <Sun className="w-5 h-5 text-text-secondary" />
+      ) : (
+        <Moon className="w-5 h-5 text-text-secondary" />
+      )}
+      <span className="sr-only">Toggle theme</span>
     </button>
   );
 }
