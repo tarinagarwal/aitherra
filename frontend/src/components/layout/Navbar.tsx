@@ -4,41 +4,20 @@ import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { GoogleLoginButton } from "../auth/GoogleLoginButton";
 
-// ============================================
-// NAVIGATION CONFIGURATION
-// ============================================
-// Add/remove navigation links here
-// For sublinks, use direct paths (e.g., /web, not /courses/web)
-// This groups similar features under one dropdown to save space
-//
-// Example with sublinks:
-// {
-//   label: "Learn",
-//   subLinks: [
-//     { label: "Web Development", href: "/web" },
-//     { label: "Data Science", href: "/data" },
-//     { label: "Mobile Dev", href: "/mobile" },
-//   ]
-// }
-//
-// Example without sublinks:
-// { label: "Community", href: "/community" }
-
+//@ts-ignore
 const NAV_LINKS = [
-  { label: "Courses", href: "/courses" },
-  {
-    label: "Learn",
-    subLinks: [
-      { label: "Web Development", href: "/web" },
-      { label: "Data Science", href: "/data" },
-      { label: "Mobile Development", href: "/mobile" },
-    ],
-  },
-  { label: "Community", href: "/community" },
-  { label: "Pricing", href: "/pricing" },
+  // { label: "Courses", href: "/courses" },
+  // {
+  //   label: "Learn",
+  //   subLinks: [
+  //     { label: "Web Development", href: "/web" },
+  //     { label: "Data Science", href: "/data" },
+  //     { label: "Mobile Development", href: "/mobile" },
+  //   ],
+  // },
+  // { label: "Community", href: "/community" },
+  // { label: "Pricing", href: "/pricing" },
 ];
-
-// ============================================
 
 export function Navbar() {
   const location = useLocation();
@@ -84,63 +63,71 @@ export function Navbar() {
 
             {/* Desktop Navigation Links - Hidden when hamburger appears */}
             <div className="hidden lg:flex items-center space-x-1">
-              {NAV_LINKS.map((link) => (
-                <div
-                  key={link.label}
-                  className="relative"
-                  onMouseEnter={() =>
-                    link.subLinks && handleMouseEnter(link.label)
-                  }
-                  onMouseLeave={handleMouseLeave}
-                >
-                  {link.subLinks ? (
-                    <>
-                      <button
-                        className={`flex items-center gap-1 px-4 py-2 rounded-lg font-medium transition-all ${
-                          openDropdown === link.label
+              {
+                //@ts-ignore
+                NAV_LINKS.map((link) => (
+                  <div
+                    key={link.label}
+                    className="relative"
+                    onMouseEnter={() =>
+                      link.subLinks && handleMouseEnter(link.label)
+                    }
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    {link.subLinks ? (
+                      <>
+                        <button
+                          className={`flex items-center gap-1 px-4 py-2 rounded-lg font-medium transition-all ${
+                            openDropdown === link.label
+                              ? "bg-indigo-500/10 text-indigo-400"
+                              : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                          }`}
+                        >
+                          {link.label}
+                          <ChevronDown
+                            className={`w-4 h-4 transition-transform ${
+                              openDropdown === link.label ? "rotate-180" : ""
+                            }`}
+                          />
+                        </button>
+                        {openDropdown === link.label && (
+                          <div className="absolute top-full left-0 mt-2 w-56 bg-zinc-950 backdrop-blur-xl rounded-xl shadow-2xl border border-indigo-500/10 py-2">
+                            {link.subLinks.map(
+                              (
+                                //@ts-ignore
+                                subLink
+                              ) => (
+                                <Link
+                                  key={subLink.label}
+                                  to={subLink.href}
+                                  className={`block px-4 py-2.5 text-sm font-medium transition-colors ${
+                                    isActive(subLink.href)
+                                      ? "bg-indigo-500/10 text-indigo-400"
+                                      : "text-slate-300 hover:bg-zinc-900 hover:text-white"
+                                  }`}
+                                >
+                                  {subLink.label}
+                                </Link>
+                              )
+                            )}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <Link
+                        to={link.href}
+                        className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                          isActive(link.href)
                             ? "bg-indigo-500/10 text-indigo-400"
-                            : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                            : "text-slate-300 hover:bg-zinc-900 hover:text-white"
                         }`}
                       >
                         {link.label}
-                        <ChevronDown
-                          className={`w-4 h-4 transition-transform ${
-                            openDropdown === link.label ? "rotate-180" : ""
-                          }`}
-                        />
-                      </button>
-                      {openDropdown === link.label && (
-                        <div className="absolute top-full left-0 mt-2 w-56 bg-zinc-950 backdrop-blur-xl rounded-xl shadow-2xl border border-indigo-500/10 py-2">
-                          {link.subLinks.map((subLink) => (
-                            <Link
-                              key={subLink.label}
-                              to={subLink.href}
-                              className={`block px-4 py-2.5 text-sm font-medium transition-colors ${
-                                isActive(subLink.href)
-                                  ? "bg-indigo-500/10 text-indigo-400"
-                                  : "text-slate-300 hover:bg-zinc-900 hover:text-white"
-                              }`}
-                            >
-                              {subLink.label}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <Link
-                      to={link.href}
-                      className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                        isActive(link.href)
-                          ? "bg-indigo-500/10 text-indigo-400"
-                          : "text-slate-300 hover:bg-zinc-900 hover:text-white"
-                      }`}
-                    >
-                      {link.label}
-                    </Link>
-                  )}
-                </div>
-              ))}
+                      </Link>
+                    )}
+                  </div>
+                ))
+              }
             </div>
 
             {/* Actions */}
@@ -220,7 +207,7 @@ export function Navbar() {
                 </div>
               ) : (
                 <div className="hidden sm:block">
-                  <GoogleLoginButton />
+                  <GoogleLoginButton variant="compact" />
                 </div>
               )}
 
@@ -260,63 +247,71 @@ export function Navbar() {
             {/* Navigation Links */}
             <div className="flex-1 overflow-y-auto py-8 px-6">
               <nav className="space-y-2">
-                {NAV_LINKS.map((link) => (
-                  <div key={link.label}>
-                    {link.subLinks ? (
-                      <>
-                        <button
-                          onClick={() =>
-                            setMobileDropdownOpen(
-                              mobileDropdownOpen === link.label
-                                ? null
-                                : link.label
-                            )
-                          }
-                          className="w-full flex items-center justify-between px-4 py-3 text-white font-medium hover:text-indigo-400 transition-colors"
+                {
+                  //@ts-ignore
+                  NAV_LINKS.map((link) => (
+                    <div key={link.label}>
+                      {link.subLinks ? (
+                        <>
+                          <button
+                            onClick={() =>
+                              setMobileDropdownOpen(
+                                mobileDropdownOpen === link.label
+                                  ? null
+                                  : link.label
+                              )
+                            }
+                            className="w-full flex items-center justify-between px-4 py-3 text-white font-medium hover:text-indigo-400 transition-colors"
+                          >
+                            {link.label}
+                            <ChevronDown
+                              className={`w-4 h-4 transition-transform duration-200 ${
+                                mobileDropdownOpen === link.label
+                                  ? "rotate-180"
+                                  : ""
+                              }`}
+                            />
+                          </button>
+                          {mobileDropdownOpen === link.label && (
+                            <div className="ml-4 mt-1 space-y-1 border-l-2 border-indigo-500/20 pl-4">
+                              {link.subLinks.map(
+                                (
+                                  //@ts-ignore
+                                  subLink
+                                ) => (
+                                  <Link
+                                    key={subLink.label}
+                                    to={subLink.href}
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className={`block py-2 text-sm font-medium transition-colors ${
+                                      isActive(subLink.href)
+                                        ? "text-indigo-400"
+                                        : "text-slate-400 hover:text-white"
+                                    }`}
+                                  >
+                                    {subLink.label}
+                                  </Link>
+                                )
+                              )}
+                            </div>
+                          )}
+                        </>
+                      ) : (
+                        <Link
+                          to={link.href}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className={`block px-4 py-3 font-medium transition-colors ${
+                            isActive(link.href)
+                              ? "text-indigo-400"
+                              : "text-white hover:text-indigo-400"
+                          }`}
                         >
                           {link.label}
-                          <ChevronDown
-                            className={`w-4 h-4 transition-transform duration-200 ${
-                              mobileDropdownOpen === link.label
-                                ? "rotate-180"
-                                : ""
-                            }`}
-                          />
-                        </button>
-                        {mobileDropdownOpen === link.label && (
-                          <div className="ml-4 mt-1 space-y-1 border-l-2 border-indigo-500/20 pl-4">
-                            {link.subLinks.map((subLink) => (
-                              <Link
-                                key={subLink.label}
-                                to={subLink.href}
-                                onClick={() => setMobileMenuOpen(false)}
-                                className={`block py-2 text-sm font-medium transition-colors ${
-                                  isActive(subLink.href)
-                                    ? "text-indigo-400"
-                                    : "text-slate-400 hover:text-white"
-                                }`}
-                              >
-                                {subLink.label}
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <Link
-                        to={link.href}
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={`block px-4 py-3 font-medium transition-colors ${
-                          isActive(link.href)
-                            ? "text-indigo-400"
-                            : "text-white hover:text-indigo-400"
-                        }`}
-                      >
-                        {link.label}
-                      </Link>
-                    )}
-                  </div>
-                ))}
+                        </Link>
+                      )}
+                    </div>
+                  ))
+                }
               </nav>
             </div>
 
@@ -371,7 +366,7 @@ export function Navbar() {
                   </button>
                 </>
               ) : (
-                <GoogleLoginButton />
+                <GoogleLoginButton variant="compact" fullWidth />
               )}
             </div>
           </div>
