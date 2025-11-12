@@ -9,6 +9,7 @@ import AuthCallback from "./pages/AuthCallback";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
 
 function AppRoutes() {
   const { user, loading } = useAuth();
@@ -52,6 +53,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route path="/p/:username" element={<Profile />} />
       {/* Add more protected routes here */}
       <Route path="*" element={<NotFound />} />
     </Routes>
