@@ -173,6 +173,14 @@ export function Navbar() {
                         </div>
                         <div className="py-2">
                           <Link
+                            to={`/p/${user.username}`}
+                            onClick={() => setProfileDropdownOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-300 hover:bg-zinc-900 hover:text-white transition-colors"
+                          >
+                            <User className="w-4 h-4" />
+                            Your Profile
+                          </Link>
+                          <Link
                             to="/dashboard"
                             onClick={() => setProfileDropdownOpen(false)}
                             className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-300 hover:bg-zinc-900 hover:text-white transition-colors"
@@ -338,6 +346,14 @@ export function Navbar() {
                       <p className="text-xs text-slate-400">@{user.username}</p>
                     </div>
                   </div>
+                  <Link
+                    to={`/p/${user.username}`}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 w-full px-6 py-3 text-white font-medium rounded-lg hover:bg-slate-800 transition-all"
+                  >
+                    <User className="w-5 h-5" />
+                    Your Profile
+                  </Link>
                   <Link
                     to="/dashboard"
                     onClick={() => setMobileMenuOpen(false)}
