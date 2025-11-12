@@ -49,6 +49,7 @@ async def get_current_user_info(user = Depends(get_current_user)):
         "name": user.name,
         "username": user.username,
         "profileImage": user.profileImage,
+        "isOnboarded": user.isOnboarded,
     }
 
 @router.put("/username")
@@ -93,6 +94,7 @@ async def update_username(
             "name": updated_user.name,
             "username": updated_user.username,
             "profileImage": updated_user.profileImage,
+            "isOnboarded": updated_user.isOnboarded,
         }
     
     finally:

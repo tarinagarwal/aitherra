@@ -111,6 +111,7 @@ async def google_auth(auth_request: GoogleAuthRequest):
                     "name": user.name,
                     "username": user.username,
                     "profileImage": user.profileImage,
+                    "isOnboarded": user.isOnboarded,
                 }
             )
         
