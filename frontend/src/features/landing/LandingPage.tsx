@@ -9,8 +9,11 @@ import {
   Award,
   MessageSquare,
 } from "lucide-react";
+import { useAuth } from "../../contexts/AuthContext";
+import { GoogleLoginButton } from "../../components/auth/GoogleLoginButton";
 
 export function LandingPage() {
+  const { user } = useAuth();
   return (
     <div className="min-h-screen bg-black">
       {/* Hero Section */}
@@ -29,12 +32,18 @@ export function LandingPage() {
             beginner to expert, we personalize your journey.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-indigo-500/50 transition-all text-lg">
-              Start Learning Free
-            </button>
-            <button className="px-8 py-4 bg-zinc-900/50 backdrop-blur-xl border border-indigo-500/20 text-white font-semibold rounded-xl hover:bg-zinc-900 transition-all text-lg">
-              Take Skill Assessment
-            </button>
+            {user ? (
+              <>
+                <button className="px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-indigo-500/50 transition-all text-lg">
+                  Start Learning Free
+                </button>
+                <button className="px-8 py-4 bg-zinc-900/50 backdrop-blur-xl border border-indigo-500/20 text-white font-semibold rounded-xl hover:bg-zinc-900 transition-all text-lg">
+                  Take Skill Assessment
+                </button>
+              </>
+            ) : (
+              <GoogleLoginButton />
+            )}
           </div>
 
           {/* Stats */}

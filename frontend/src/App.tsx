@@ -3,6 +3,7 @@ import { Navbar } from "./components/layout/Navbar";
 import { Footer } from "./components/layout/Footer";
 import { LandingPage } from "./features/landing/LandingPage";
 import NotFound from "./pages/NotFound";
+import AuthCallback from "./pages/AuthCallback";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
           {/* Add more routes here */}
           <Route path="*" element={<NotFound />} />
         </Routes>
