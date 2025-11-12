@@ -1,6 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X, User, Settings, LogOut } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
+import { GoogleLoginButton } from "../auth/GoogleLoginButton";
 
 // ============================================
 // NAVIGATION CONFIGURATION
@@ -40,7 +42,9 @@ const NAV_LINKS = [
 
 export function Navbar() {
   const location = useLocation();
+  const { user, logout } = useAuth();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState<string | null>(
     null
@@ -141,12 +145,84 @@ export function Navbar() {
 
             {/* Actions */}
             <div className="flex items-center space-x-3">
-              <button className="hidden sm:block px-5 py-2.5 text-slate-300 hover:text-white transition-colors font-medium rounded-lg hover:bg-zinc-900">
-                Sign In
-              </button>
-              <button className="hidden sm:block px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-indigo-500/50 hover:scale-105 transition-all">
-                Start Free
-              </button>
+              {user ? (
+                <div className="relative hidden sm:block">
+                  <button
+                    onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-zinc-900 transition-all"
+                  >
+                    {user.profileImage ? (
+                      <img
+                        src={user.profileImage}
+                        alt={user.name}
+                        className="w-9 h-9 rounded-full border-2 border-indigo-500/30"
+                      />
+                    ) : (
+                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                        <User className="w-5 h-5 text-white" />
+                      </div>
+                    )}
+                    <ChevronDown
+                      className={`w-4 h-4 text-slate-400 transition-transform ${
+                        profileDropdownOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {profileDropdownOpen && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-40"
+                        onClick={() => setProfileDropdownOpen(false)}
+                      />
+                      <div className="absolute right-0 mt-2 w-64 bg-zinc-950 backdrop-blur-xl rounded-xl shadow-2xl border border-indigo-500/10 py-2 z-50">
+                        <div className="px-4 py-3 border-b border-indigo-500/10">
+                          <p className="text-sm font-semibold text-white">
+                            {user.name}
+                          </p>
+                          <p className="text-xs text-slate-400">
+                            @{user.username}
+                          </p>
+                        </div>
+                        <div className="py-2">
+                          <Link
+                            to="/dashboard"
+                            onClick={() => setProfileDropdownOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-300 hover:bg-zinc-900 hover:text-white transition-colors"
+                          >
+                            <User className="w-4 h-4" />
+                            Dashboard
+                          </Link>
+                          <Link
+                            to="/settings"
+                            onClick={() => setProfileDropdownOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-300 hover:bg-zinc-900 hover:text-white transition-colors"
+                          >
+                            <Settings className="w-4 h-4" />
+                            Change Username
+                          </Link>
+                        </div>
+                        <div className="border-t border-indigo-500/10 pt-2">
+                          <button
+                            onClick={() => {
+                              logout();
+                              setProfileDropdownOpen(false);
+                            }}
+                            className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-medium text-red-400 hover:bg-zinc-900 transition-colors"
+                          >
+                            <LogOut className="w-4 h-4" />
+                            Sign Out
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              ) : (
+                <div className="hidden sm:block">
+                  <GoogleLoginButton />
+                </div>
+              )}
 
               {/* Mobile Menu Button */}
               <button
@@ -246,12 +322,57 @@ export function Navbar() {
 
             {/* Mobile Actions */}
             <div className="p-6 space-y-3 border-t border-indigo-500/10">
-              <button className="w-full px-6 py-3 text-white font-medium rounded-lg hover:bg-slate-800 transition-all">
-                Sign In
-              </button>
-              <button className="w-full px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-indigo-500/50 transition-all">
-                Start Free
-              </button>
+              {user ? (
+                <>
+                  <div className="flex items-center gap-3 px-4 py-3 bg-zinc-900/50 rounded-lg">
+                    {user.profileImage ? (
+                      <img
+                        src={user.profileImage}
+                        alt={user.name}
+                        className="w-10 h-10 rounded-full border-2 border-indigo-500/30"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                        <User className="w-5 h-5 text-white" />
+                      </div>
+                    )}
+                    <div>
+                      <p className="text-sm font-semibold text-white">
+                        {user.name}
+                      </p>
+                      <p className="text-xs text-slate-400">@{user.username}</p>
+                    </div>
+                  </div>
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 w-full px-6 py-3 text-white font-medium rounded-lg hover:bg-slate-800 transition-all"
+                  >
+                    <User className="w-5 h-5" />
+                    Dashboard
+                  </Link>
+                  <Link
+                    to="/settings"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-3 w-full px-6 py-3 text-white font-medium rounded-lg hover:bg-slate-800 transition-all"
+                  >
+                    <Settings className="w-5 h-5" />
+                    Change Username
+                  </Link>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="flex items-center gap-3 w-full px-6 py-3 text-red-400 font-medium rounded-lg hover:bg-slate-800 transition-all"
+                  >
+                    <LogOut className="w-5 h-5" />
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <GoogleLoginButton />
+              )}
             </div>
           </div>
         </div>
