@@ -14,7 +14,8 @@ export function GoogleLoginButton({
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3001/api/auth/google/url");
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+      const response = await fetch(`${API_URL}/api/auth/google/url`);
       const data = await response.json();
       window.location.href = data.url;
     } catch (error) {

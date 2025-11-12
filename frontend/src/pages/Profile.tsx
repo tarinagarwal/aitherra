@@ -35,9 +35,8 @@ export default function Profile() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3001/api/profile/${username}`
-        );
+        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+        const response = await fetch(`${API_URL}/api/profile/${username}`);
 
         if (!response.ok) {
           if (response.status === 404) {

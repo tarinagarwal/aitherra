@@ -81,18 +81,16 @@ export default function Onboarding() {
   const handleComplete = async () => {
     setLoading(true);
     try {
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
       const token = localStorage.getItem("token");
-      const response = await fetch(
-        "http://localhost:3001/api/onboarding/complete",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${API_URL}/api/onboarding/complete`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
 
       if (!response.ok) {
         const error = await response.json();

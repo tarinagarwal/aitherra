@@ -16,8 +16,9 @@ export default function Settings() {
     setLoading(true);
 
     try {
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:3001/api/user/username", {
+      const response = await fetch(`${API_URL}/api/user/username`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
