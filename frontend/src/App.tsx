@@ -1,9 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Navbar } from "./components/layout/Navbar";
 import { Footer } from "./components/layout/Footer";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import { LandingPage } from "./features/landing/LandingPage";
 import NotFound from "./pages/NotFound";
 import AuthCallback from "./pages/AuthCallback";
+import Onboarding from "./pages/Onboarding";
 import Settings from "./pages/Settings";
 
 function App() {
@@ -14,8 +16,23 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
-          <Route path="/settings" element={<Settings />} />
-          {/* Add more routes here */}
+          <Route
+            path="/onboarding"
+            element={
+              <ProtectedRoute requireOnboarding={false}>
+                <Onboarding />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
+          {/* Add more protected routes here */}
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
