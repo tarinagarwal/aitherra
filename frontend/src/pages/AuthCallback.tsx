@@ -32,7 +32,13 @@ export default function AuthCallback() {
 
         const data = await response.json();
         login(data.access_token, data.user);
-        navigate("/", { replace: true });
+
+        // Redirect to onboarding if not completed
+        if (!data.user.isOnboarded) {
+          navigate("/onboarding", { replace: true });
+        } else {
+          navigate("/", { replace: true });
+        }
       } catch (error) {
         console.error("Auth error:", error);
         navigate("/", { replace: true });

@@ -12,6 +12,7 @@ interface User {
   name: string;
   username: string;
   profileImage?: string;
+  isOnboarded?: boolean;
 }
 
 interface AuthContextType {
