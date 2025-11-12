@@ -45,6 +45,7 @@ export function Navbar() {
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState<string | null>(
     null
   );
+  //@ts-ignore
   const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const isActive = (href: string) => location.pathname === href;

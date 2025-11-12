@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Navbar } from "./components/layout/Navbar";
 import { Footer } from "./components/layout/Footer";
 import { LandingPage } from "./features/landing/LandingPage";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           {/* Add more routes here */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
       </div>
