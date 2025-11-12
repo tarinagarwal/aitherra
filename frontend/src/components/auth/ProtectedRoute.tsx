@@ -15,8 +15,11 @@ export function ProtectedRoute({
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-indigo-500 animate-spin" />
+      <div className="min-h-screen bg-gradient-to-br from-black via-zinc-900 to-black flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 text-indigo-500 animate-spin mx-auto mb-4" />
+          <p className="text-zinc-400">Loading...</p>
+        </div>
       </div>
     );
   }

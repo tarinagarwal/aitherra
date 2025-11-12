@@ -32,6 +32,12 @@ export default function Onboarding() {
     learningStyle: "",
   });
 
+  // Redirect if already onboarded
+  if (user?.isOnboarded) {
+    navigate("/dashboard", { replace: true });
+    return null;
+  }
+
   const handleComplete = async () => {
     setLoading(true);
     try {
