@@ -10,12 +10,21 @@ datasource db {
 }
 
 model User {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  email         String   @unique
-  name          String
-  username      String   @unique
-  profileImage  String?
-  googleId      String?  @unique
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  email             String   @unique
+  name              String
+  username          String   @unique
+  profileImage      String?
+  googleId          String?  @unique
+  
+  // Onboarding fields
+  isOnboarded       Boolean  @default(false)
+  experienceLevel   String?  // "beginner", "intermediate", "advanced"
+  timeCommitment    Int?     // hours per week
+  primaryLanguage   String?  // "python", "javascript", "java", "cpp", etc.
+  learningGoals     String[] @default([])
+  learningStyle     String?  // "visual", "hands-on", "reading", "mixed"
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
