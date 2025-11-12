@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import {
   Loader2,
@@ -21,6 +21,7 @@ interface OnboardingData {
 
 export default function Onboarding() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, updateUser } = useAuth();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -37,6 +38,45 @@ export default function Onboarding() {
     navigate("/dashboard", { replace: true });
     return null;
   }
+
+  // Prevent navigation away from onboarding
+  useEffect(() => {
+    // Block browser back button
+    const handlePopState = (e: PopStateEvent) => {
+      e.preventDefault();
+      navigate("/onboarding", { replace: true });
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    // Push current state to prevent back navigation
+    window.history.pushState(null, "", window.location.href);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [navigate]);
+
+  // Prevent navigation via route changes
+  useEffect(() => {
+    if (user && !user.isOnboarded && location.pathname !== "/onboarding") {
+      navigate("/onboarding", { replace: true });
+    }
+  }, [location.pathname, user, navigate]);
+
+  // Warn user before closing tab/window
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = ""; // Chrome requires returnValue to be set
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
   const handleComplete = async () => {
     setLoading(true);
