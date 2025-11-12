@@ -54,13 +54,21 @@ export default function Onboarding() {
         }
       );
 
-      if (!response.ok) throw new Error("Failed to complete onboarding");
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || "Failed to complete onboarding");
+      }
 
       const result = await response.json();
       updateUser({ ...user!, isOnboarded: true });
-      navigate("/", { replace: true });
+      navigate("/dashboard", { replace: true });
     } catch (error) {
       console.error("Onboarding error:", error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to complete onboarding. Please try again."
+      );
       setLoading(false);
     }
   };
