@@ -1,0 +1,16 @@
+[MASTER]
+init-hook='import sys; sys.path.append(".")'
+
+[MESSAGES CONTROL]
+disable=C0111,C0103,R0903,W0107
+
+[FORMAT]
+max-line-length=120
+indent-string='    '
+
+[BASIC]
+good-names=i,j,k,ex,Run,_,id,app
+
+[DESIGN]
+max-args=7
+max-attributes=10
